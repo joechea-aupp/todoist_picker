@@ -25,6 +25,15 @@ func filter[T any](slice []T, predice func(T) bool) []T {
 	return result
 }
 
+func formatJsonResponse[T any](t T) ( string, error ) {
+	jsonBytes, err := json.MarshalIndent(t, "", "  ")
+	if err != nil {
+		fmt.Println("Error: ", err)
+		return "", err
+	}
+	return string(jsonBytes), nil
+}
+
 func main() {
 
 	godotenv.Load()
@@ -53,11 +62,11 @@ func main() {
 
 	randomPickTask := rand.Intn(len(data.Result))
 
-	jsonBytes, err := json.MarshalIndent(data.Result[randomPickTask], "", "  ")
+	response, err := formatJsonResponse(data.Result[randomPickTask])
 	if err != nil {
 		fmt.Println("Error: ", err)
 		return
 	}
 
-	fmt.Println("Tasks: ", string(jsonBytes))
+	fmt.Println("Tasks: ", response)
 }
