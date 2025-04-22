@@ -39,9 +39,25 @@ func formatDisplayResponse(t Task) string {
 	return response
 }
 
+type Config struct {
+	EnvPath string `json:"env_path"`
+}
+
 func main() {
 
-	godotenv.Load()
+
+	content, err := os.ReadFile("/home/joe/dev/todoist_picker/config.json")
+	if err != nil {
+		panic(err)
+	}
+
+	var config Config
+	err = json.Unmarshal(content, &config)
+	if err != nil {
+		panic(err)
+	}
+
+    godotenv.Load(config.EnvPath)
 
 	Todoist := &App{
 		auth: NewAuthenticatedClient(os.Getenv("TODOAPI"), os.Getenv("TODOURL")),
