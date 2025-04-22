@@ -3,10 +3,10 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"math/rand"
 	"net/url"
 	"os"
-	"log"
 
 	"github.com/joho/godotenv"
 )
@@ -25,13 +25,18 @@ func filter[T any](slice []T, predice func(T) bool) []T {
 	return result
 }
 
-func formatJsonResponse[T any](t T) ( string, error ) {
+func formatJsonResponse[T any](t T) (string, error) {
 	jsonBytes, err := json.MarshalIndent(t, "", "  ")
 	if err != nil {
 		fmt.Println("Error: ", err)
 		return "", err
 	}
 	return string(jsonBytes), nil
+}
+
+func formatDisplayResponse(t Task) string {
+	response := fmt.Sprintf("Task: %s\nPriority: %d\nDescription: %s\nTags:%s\n", t.Content, t.Priority, t.Description, t.Labels)
+	return response
 }
 
 func main() {
@@ -42,11 +47,11 @@ func main() {
 		auth: NewAuthenticatedClient(os.Getenv("TODOAPI"), os.Getenv("TODOURL")),
 	}
 
-	log.Println("Getting today and overdue tasks:")
+	// log.Println("Getting today and overdue tasks:")
 	data, err := Todoist.getTasks("(today|overdue)")
 
 	if len(data.Result) == 0 {
-		log.Println("No today or overdue tasks found, proceeding to get all tasks from AUPP Admin:")
+		// log.Println("No today or overdue tasks found, proceeding to get all tasks from AUPP Admin:")
 		data, err = Todoist.getTasks(url.QueryEscape(os.Getenv("SECONDARYTASK")))
 	}
 
@@ -62,11 +67,5 @@ func main() {
 
 	randomPickTask := rand.Intn(len(data.Result))
 
-	response, err := formatJsonResponse(data.Result[randomPickTask])
-	if err != nil {
-		fmt.Println("Error: ", err)
-		return
-	}
-
-	fmt.Println("Tasks: ", response)
+	fmt.Println("Tasks: ", formatDisplayResponse(data.Result[randomPickTask]))
 }

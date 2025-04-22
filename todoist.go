@@ -30,6 +30,7 @@ type Task struct {
 	Priority    int       `json:"priority"`
 	ChildOrder  int       `json:"child_order"`
 	Content     string    `json:"content"`
+	Description string    `json:"description"`
 }
 
 type TodoistResponse struct {
