@@ -83,5 +83,5 @@ func main() {
 
 	randomPickTask := rand.Intn(len(data.Result))
 
-	fmt.Println("Tasks: ", formatDisplayResponse(data.Result[randomPickTask]))
+	fmt.Println(formatDisplayResponse(data.Result[randomPickTask]))
 }
