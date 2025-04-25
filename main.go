@@ -35,7 +35,7 @@ func formatJsonResponse[T any](t T) (string, error) {
 }
 
 func formatDisplayResponse(t Task) string {
-	response := fmt.Sprintf("Task: %s\nPriority: %d\nDescription: %s\nTags:%s\n", t.Content, t.Priority, t.Description, t.Labels)
+	response := fmt.Sprintf("Task: %s\nPriority: %d\nDescription: %s\nTags:%s\nDate: %s", t.Content, t.Priority, t.Description, t.Labels, t.Due.Date)
 	return response
 }
 
@@ -68,6 +68,7 @@ func main() {
 
 	if len(data.Result) == 0 {
 		// log.Println("No today or overdue tasks found, proceeding to get all tasks from AUPP Admin:")
+		log.Println(os.Getenv("SECONDARYTASK"))
 		data, err = Todoist.getTasks(url.QueryEscape(os.Getenv("SECONDARYTASK")))
 	}
 
